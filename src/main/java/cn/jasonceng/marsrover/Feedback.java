@@ -12,10 +12,16 @@ import cn.jasonceng.marsrover.dic.Status;
 public class Feedback {
     private Status status;
     private int exeInstructionSize;
+    private String message;
 
-    public Feedback(Status status, int exeInstructionSize) {
+    public Feedback(Status status, int exeInstructionSize, String message) {
         this.status = status;
         this.exeInstructionSize = exeInstructionSize;
+        this.message = message;
+    }
+
+    public Feedback() {
+
     }
 
     public Status getStatus() {
@@ -32,5 +38,13 @@ public class Feedback {
 
     public void setExeInstructionSize(int exeInstructionSize) {
         this.exeInstructionSize = exeInstructionSize;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

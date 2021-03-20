@@ -221,4 +221,86 @@ public class RoverTest {
                 {Turn.RIGHT, Movement.BACK, 20, Direction.EAST, new Point(0,5)}
         };
     }
+
+    /**
+     * 任务五：反馈指令执行结果
+     * 验证空指令序列、空指令序列对象执行成功结果
+     */
+    @ParameterizedTest
+    @MethodSource("getNullInstructionSequence")
+    public void should_return_success_and_warning_when_given_null_instruction_sequence(List<Instruction> instructionList) {
+        //given
+
+        //when
+        Feedback feedback = rover.execute(instructionList);
+
+        //then
+        Assertions.assertEquals(Status.SUCCESS, feedback.getStatus());
+        Assertions.assertEquals(0,feedback.getExeInstructionSize());
+        Assertions.assertEquals("无效指令序列",feedback.getMessage());
+    }
+
+    /**
+     * 任务五：反馈指令执行结果
+     * 验证指令为空的返回结果
+     */
+    @Test
+    public void should_return_fail_when_exist_null_instruction() {
+        //given
+        List<Instruction> instructionList = new ArrayList<>();
+        instructionList.add(new Instruction(Turn.NONE, Movement.FORWARD, 1));
+        instructionList.add(null);
+        instructionList.add(new Instruction(Turn.LEFT, Movement.FORWARD, 2));
+
+        //when
+        Feedback feedback = rover.execute(instructionList);
+
+        //then
+        Assertions.assertEquals(Status.FAIL, feedback.getStatus());
+        Assertions.assertEquals(1,feedback.getExeInstructionSize());
+        Assertions.assertEquals("存在空指令",feedback.getMessage());
+    }
+
+    /**
+     * 任务五：反馈指令执行结果
+     * 验证指令正常执行的成功结果
+     */
+    @Test
+    public void should_return_success_when_not_over_border() {
+        //given
+        List<Instruction> instructionList = new ArrayList<>();
+        instructionList.add(new Instruction(Turn.NONE, Movement.FORWARD, 1));
+        instructionList.add(new Instruction(Turn.RIGHT, Movement.FORWARD, 1));
+        instructionList.add(new Instruction(Turn.LEFT, Movement.FORWARD, 2));
+
+        //when
+        Feedback feedback = rover.execute(instructionList);
+
+        //then
+        Assertions.assertEquals(Status.SUCCESS, feedback.getStatus());
+        Assertions.assertEquals(3,feedback.getExeInstructionSize());
+        Assertions.assertEquals("指令执行成功",feedback.getMessage());
+    }
+
+    /**
+     * 任务五：反馈指令执行结果
+     * 验证指令因超出边界的失败结果
+     */
+    @Test
+    public void should_return_fail_when_over_border() {
+        //given
+        List<Instruction> instructionList = new ArrayList<>();
+        instructionList.add(new Instruction(Turn.NONE, Movement.FORWARD, 20));
+        instructionList.add(new Instruction(Turn.RIGHT, Movement.FORWARD, 1));
+        instructionList.add(new Instruction(Turn.LEFT, Movement.FORWARD, 2));
+
+        //when
+        Feedback feedback = rover.execute(instructionList);
+
+        //then
+        Assertions.assertEquals(Status.FAIL, feedback.getStatus());
+        Assertions.assertEquals(0,feedback.getExeInstructionSize());
+        Assertions.assertEquals("指令执行中超出边界",feedback.getMessage());
+    }
+
 }
